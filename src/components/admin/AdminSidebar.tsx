@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Home, Package, FolderTree, ShoppingCart, LogOut, ArrowLeft, AudioLines } from "lucide-react";
+import { LayoutDashboard, Home, Package, FolderTree, ShoppingCart, LogOut, ArrowLeft, AudioLines, BadgeCheck } from "lucide-react";
 import clsx from "clsx";
 
 export function AdminSidebar() {
@@ -15,6 +15,7 @@ export function AdminSidebar() {
         { href: "/admin/categorias", icon: FolderTree, label: "Categorías" },
         { href: "/admin/ordenes", icon: ShoppingCart, label: "Órdenes" },
         { href: "/admin/factory", icon: AudioLines, label: "Factory" },
+        { href: "/admin/artistas", icon: BadgeCheck, label: "Artistas" },
     ];
 
     return (

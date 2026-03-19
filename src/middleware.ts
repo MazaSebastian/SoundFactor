@@ -12,5 +12,6 @@ export const config = {
         "/admin/:path*",
         "/cuenta/:path*",
         "/auth/:path*",
+        "/artista/:path*",
     ],
 };
