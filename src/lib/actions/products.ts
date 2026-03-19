@@ -1,11 +1,10 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { unstable_cache } from "next/cache";
 import type { Product } from "@/lib/types";
 
 /* ============================================
-   PRODUCTS — Server Actions (with caching)
+   PRODUCTS — Server Actions
    ============================================ */
 
 export async function getProducts(): Promise<Product[]> {
@@ -31,44 +30,30 @@ export async function getProductById(id: string): Promise<Product | null> {
     return data;
 }
 
-/**
- * Featured products — cached for 60s since they rarely change
- */
-export const getFeaturedProducts = unstable_cache(
-    async (): Promise<Product[]> => {
-        const supabase = await createClient();
-        const { data, error } = await supabase
-            .from("products")
-            .select("*, category:categories(*)")
-            .eq("is_featured", true)
-            .eq("is_active", true)
-            .order("created_at", { ascending: false });
+export async function getFeaturedProducts(): Promise<Product[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from("products")
+        .select("*, category:categories(*)")
+        .eq("is_featured", true)
+        .eq("is_active", true)
+        .order("created_at", { ascending: false });
 
-        if (error) throw new Error(error.message);
-        return data ?? [];
-    },
-    ["featured-products"],
-    { revalidate: 60 }
-);
+    if (error) throw new Error(error.message);
+    return data ?? [];
+}
 
-/**
- * All active products — cached for 30s
- */
-export const getActiveProducts = unstable_cache(
-    async (): Promise<Product[]> => {
-        const supabase = await createClient();
-        const { data, error } = await supabase
-            .from("products")
-            .select("*, category:categories(*)")
-            .eq("is_active", true)
-            .order("created_at", { ascending: false });
+export async function getActiveProducts(): Promise<Product[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from("products")
+        .select("*, category:categories(*)")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false });
 
-        if (error) throw new Error(error.message);
-        return data ?? [];
-    },
-    ["active-products"],
-    { revalidate: 30 }
-);
+    if (error) throw new Error(error.message);
+    return data ?? [];
+}
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
     const supabase = await createClient();
